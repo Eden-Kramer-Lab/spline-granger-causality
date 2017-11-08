@@ -92,10 +92,6 @@ bfcorrection = 0.05/length(model_fit.stat);
 model_fit.pvals =  pval2grstat(model_fit.stat,'grstatistic');
 model_fit.fails = find(model_fit.pvals<bfcorrection)';
 
-% Plot
-if model_estimated.show_all_plots
-    
-    
-end
+
 end
 
