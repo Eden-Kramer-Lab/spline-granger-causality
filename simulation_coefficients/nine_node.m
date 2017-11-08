@@ -1,4 +1,4 @@
-function b = nine_node_stand_30
+function b = nine_node
 % Coefficients for a nine node MVAR network.  Created by 1) generating data
 % using smooth functions for history dependence 2) fitting the
 % standard-Granger model to the data generated in (1), and 3) saving those

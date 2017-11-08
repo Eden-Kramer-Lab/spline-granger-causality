@@ -27,7 +27,7 @@ axis square
 nelectrodes = size(adj,1);
 if nelectrodes <= 9
     %%% yticklabel
-    xloc = 0.0*ones(1,nelectrodes)
+    xloc = 0.0*ones(1,nelectrodes);
     text(xloc,[1:nelectrodes],stringy,'FontSize',18);
     ylabh = get(gca,'YLabel');
     set(ylabh,'Position',get(ylabh,'Position') - [.5 0 0])

@@ -27,28 +27,32 @@ for electrode = 1:nelectrodes
     
     true_signal =  datap(electrode,:);   
     est_signal = yestimate(electrode,:);
-    
-    h= figure;
-    % Plot the true and estimated/recondstructed signal
-    subplot 311
-    plot(taxis(model_order+1:end),true_signal,'k');
-    hold on;
-    plot(taxis(model_order+1:end),est_signal,'r');
-    xlabel('Time(s)');
-    legend('true signal','estimated signal')
-    
-    % Calculuate and plot residuals
     residuals(electrode,:) = true_signal-est_signal;
-    subplot 312
-    plot(taxis(model_order+1:end),residuals(electrode,:),'.');
-    plot(residuals(electrode,:),'.');
-    title('Residuals')
-    xlabel('Time(s)');
     
-    % Plot autocorrelation of residuals
-    subplot 313
-    autocorr(residuals(electrode,:));
-    suptitle(num2str(electrode))
+    if model.show_all_plots
+        h= figure;
+        % Plot the true and estimated/recondstructed signal
+        subplot 311
+        plot(taxis(model_order+1:end),true_signal,'k');
+        hold on;
+        plot(taxis(model_order+1:end),est_signal,'r');
+        xlabel('Time(s)');
+        legend('true signal','estimated signal')
+        
+        % Calculuate and plot residuals
+        
+        subplot 312
+        plot(taxis(model_order+1:end),residuals(electrode,:),'.');
+        plot(residuals(electrode,:),'.');
+        title('Residuals')
+        xlabel('Time(s)');
+        
+        % Plot autocorrelation of residuals
+        subplot 313
+        autocorr(residuals(electrode,:));
+        suptitle(['Fit for Signal: ' num2str(electrode) ' of ' model.name])
+       % suptitle(strcat({'Standard, '},num2str(model_standard.computation_time),{' s'}),'FontSize',16
+    end
 end
 
 % Calculate DW- statistic
@@ -57,10 +61,6 @@ end
 % Control for mulitple hypothesis using False-Discovery Rate
 sig = significance(pval,0.05,'FDR');
 notwhite = find(sig);
-if isempty(notwhite)
-    fprintf('all residuals are white by Durbin-Watson test at significance %g\n',0.05);
-else
-    fprintf(2,'WARNING: autocorrelated residuals at significance %g for variable(s): %s\n',0.05,num2str(notwhite));
-end
+
 end
 

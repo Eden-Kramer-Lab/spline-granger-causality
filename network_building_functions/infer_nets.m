@@ -19,6 +19,7 @@ model_spline.model_coefficients = bhat;
 model_spline.computation_time = splinetime;
 model_spline.signal_estimate = yhat;
 model_spline.network = adj_spline;
+model_spline.name = 'Spline-Granger Model';
 
 %%% Fit standard-Granger model to data ------------------------------------
 tic
@@ -31,6 +32,7 @@ model_standard.model_coefficients = bhat;
 model_standard.computation_time = standardtime;
 model_standard.signal_estimate = yhat;
 model_standard.network = adj_standard;
+model_standard.name = 'Standard-Granger Model';
 
 end
 
