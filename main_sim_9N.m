@@ -35,7 +35,7 @@ model_true = simulate_data(model_true);
 
 [model_true, model_spline, model_standard] = infer_nets(model_true);
 
-%%% ----------------------------------Plot results ------------------------
+%%% -----------------------Plot results -----------------------------------
 plot_nets;
 
 %%% ---------------------- Check goodness of fit -------------------------

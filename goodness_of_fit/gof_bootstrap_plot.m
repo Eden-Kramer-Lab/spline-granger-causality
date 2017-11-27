@@ -1,4 +1,4 @@
-function gof_bootstrap_plot( model_true,model_spline,model_standard)
+function f = gof_bootstrap_plot( model_true,model_spline,model_standard,varargin)
 % GOF_BOOTSTRAP_PLOT estimates confifence bounds for the coefficient fits using
 % a boostrapping procedure. We use the observed coefficient estimates and
 % their estimated covariance to generate xxx (nsurrogates variable)
@@ -20,6 +20,12 @@ function gof_bootstrap_plot( model_true,model_spline,model_standard)
 %    true connection. 
 
 % Initialize
+
+if nargin ==4
+    newfig = false;
+else
+    newfig = true;
+end
 data = model_true.data;
 nelectrodes = size(data,1);
 model_order = model_true.estimated_model_order;
@@ -52,7 +58,13 @@ for electrode = 1:nelectrodes % plot fit for every electrode in network
         [UB,LB]= myBootstrap(model_spline,electrode);
         [ UB2, LB2] = myBootstrapStandard( model_standard, electrode );
     end
-    figure;
+    if newfig
+        f= figure;
+    else 
+         ax = varargin{1};
+         set(gcf, 'CurrentAxes', ax); 
+    end
+    
     k=1;
     for i = 1:nelectrodes
         adj_sum = adj_spline + adj_true + adj_stand;
@@ -60,7 +72,9 @@ for electrode = 1:nelectrodes % plot fit for every electrode in network
         adj_sum(adj_sum==3)=1;
         nconnections = sum(adj_sum(electrode,:));
         if (adj_spline(electrode,i) || adj_true(electrode,i) ||adj_stand(electrode,i))
+            if newfig
             subplot(nconnections,1,k)
+            end
             plot(dt:dt:(model_order/f0),squeeze(real(bhat(electrode,i,:))),'r','LineWidth',1.5)
             hold on
             plot(dt:dt:(model_order/f0),squeeze(real(b_est_stand(electrode,i,:))),'g','LineWidth',1.5)

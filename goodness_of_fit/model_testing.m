@@ -65,5 +65,5 @@ end
 %% Model Test #3 - Test coefficients
 
 if model_true.show_all_plots
-    gof_bootstrap_plot( model_true,model_spline,model_standard)
+    gof_bootstrap_plot( model_true,model_spline,model_standard);
 end
