@@ -5,7 +5,7 @@ model_true.show_all_plots = true; % if true, all plots for all signal fits will 
                                   % ... results will be shown.
                        
 %%% Simulation parameters
-model_true.true_coefficients = single_node_order20 ;
+model_true.true_coefficients = single_node_high_freq ;
 model_true.model_coefficients = model_true.true_coefficients;   
 model_true.sampling_frequency = 500;
 model_true.T = 20;        % time in seconds of window
@@ -15,7 +15,7 @@ model_true.taxis = (1/model_true.sampling_frequency):(1/model_true.sampling_freq
 %%% Define model inputs for spline Granger & standard Granger
 
 model_true.s = 0.5;                     % spline tenstion paramter
-model_true.estimated_model_order = 20;  % history dependence in model 
+model_true.estimated_model_order = 30;  % history dependence in model 
                                         % ... (samples)
 model_true.cntrl_pts =0:5:model_true.estimated_model_order; % control points
 

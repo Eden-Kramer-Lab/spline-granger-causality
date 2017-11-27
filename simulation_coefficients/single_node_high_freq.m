@@ -1,4 +1,4 @@
-function b = single_node_order20
+function b = single_node_high_freq
 % Returns coefficients for univariate AR(20) model
 b = zeros(1,1,20);
 b(1,1,:)= [-0.02314,0.1,0.05, ...
