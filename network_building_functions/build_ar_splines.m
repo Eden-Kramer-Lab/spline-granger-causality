@@ -1,4 +1,4 @@
-function [ adj_mat] = build_ar_splines( model )
+function [ adj_mat, C] = build_ar_splines( model )
 % BUILD_AR_SPLINES builds network model using spline-Granger approach and
 % outputs:
 % . adj_mat = adjacencey matrix for corresponding network
@@ -79,12 +79,21 @@ for electrode = 1:nelectrodes
     
     % Fit full model and calculate RSS
     Xfull = X * Z1;      % regressors for y_hat = X*Z1*alpha
-    [alpha,~,stats] = glmfit(Xfull,y,'normal','constant','off');
-    fit.weights = alpha;
-    fit.pvals = stats.p;
-    fit.se = stats.se;
-    A = Xfull;
-    y_hat = A*round(alpha,10);
+        [mdl1] = fitglm(Xfull,y,'Distribution','normal','Intercept',false);
+        A= Xfull;
+        alpha = mdl1.Coefficients.Estimate;
+        y_hat = A*round(alpha,10);
+        fit.AIC = mdl1.ModelCriterion.AIC;
+%    [alpha,dev,stats] = glmfit(Xfull,y,'normal','constant','off');
+%     fit.weights = alpha;
+%     fit.pvals = stats.p;
+%     fit.se = stats.se;
+%     fit.dev = dev;
+%     A = Xfull;
+%     y_hat = A*round(alpha,10);
+%     LL2 = sum(log(normpdf(y,y_hat)));
+%     fit.LL2 = LL2;
+    C{electrode} = fit;
     error = (y_hat - y).^2;
     rss = sum(error);
     
@@ -93,11 +102,13 @@ for electrode = 1:nelectrodes
         indices = ~(e_names == ii);
         X0 = X(:,indices); 
         X0full = X0 * Z0;  
-        [a0,~,stats] = glmfit(X0full,y,'normal','constant','off');
-        fit0.weights = a0;
-        fit0.pvals = stats.p;
-        fit0.se = stats.se;
+        [mdl0] = fitglm(X0full,y,'Distribution','normal','Intercept',false);
+        %[a0,~,stats] = glmfit(X0full,y,'normal','constant','off');
+%         fit0.weights = a0;
+%         fit0.pvals = stats.p;
+%         fit0.se = stats.se;
         A = X0full;
+        a0 = mdl0.Coefficients.Estimate;
         y_hat = A*round(a0,10) ;
         error = (y_hat - y).^2;
         rss0 = sum(error);

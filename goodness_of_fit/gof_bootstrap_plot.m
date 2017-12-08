@@ -75,17 +75,17 @@ for electrode = 1:nelectrodes % plot fit for every electrode in network
             if newfig
             subplot(nconnections,1,k)
             end
-            plot(dt:dt:(model_order/f0),squeeze(real(bhat(electrode,i,:))),'r','LineWidth',1.5)
+            plot(dt:dt:(model_order/f0),squeeze(real(bhat(electrode,i,:))),'r','LineWidth',2.5)
             hold on
-            plot(dt:dt:(model_order/f0),squeeze(real(b_est_stand(electrode,i,:))),'g','LineWidth',1.5)
+            plot(dt:dt:(model_order/f0),squeeze(real(b_est_stand(electrode,i,:))),'g','LineWidth',2.5)
             if nlags <= 5
                 plot(dt:dt:(nlags/f0),squeeze(real(b(electrode,i,:))),'.k','MarkerSize',30);
             else
                 plot(dt:dt:(nlags/f0),squeeze(real(b(electrode,i,:))),'k','LineWidth',2);
             end
             plot(cntrl_pts(2:end)./f0,squeeze(bhat(electrode,i,cntrl_pts(2:end))),'ro','MarkerFaceColor','r')
-            plot(dt:dt:(model_order/f0),real(LB(:,i)),'--r','LineWidth',1)
-            plot(dt:dt:(model_order/f0),real(UB(:,i)),'--r','LineWidth',1)
+            plot(dt:dt:(model_order/f0),real(LB(:,i)),'--r','LineWidth',1.5)
+            plot(dt:dt:(model_order/f0),real(UB(:,i)),'--r','LineWidth',1.5)
           
             plot(dt:dt:(model_order/f0),UB2(:,i),'--g','LineWidth',1.5)
             plot(dt:dt:(model_order/f0),LB2(:,i),'--g','LineWidth',1.5)

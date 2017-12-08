@@ -1,4 +1,4 @@
-function [ adj_mat] = build_ar( model )
+function [ adj_mat, C] = build_ar( model )
 % BUILD_AR builds network model using standard-Granger approach, i.e. 
 % condutional Granger-causality
 % 
@@ -51,15 +51,22 @@ for electrode = 1:nelectrodes
     y = y';
     
     % Fit full model
-    [b,~,stats] = glmfit(X,y);
-    fit.weights = b;
-    fit.pvals = stats.p;
-    fit.se = stats.se;
+%     [b,dev,stats] = glmfit(X,y,'normal','constant','off');
+%     fit.weights = b;
+%     fit.pvals = stats.p;
+%     fit.se = stats.se;
+%     fit.dev = dev;
+ [mdl1] = fitglm(X,y,'Distribution','normal','Intercept',false);
+        A= X;
+        b = mdl1.Coefficients.Estimate;
+    
+        fit.AIC = mdl1.ModelCriterion.AIC;
     C{electrode} = fit;
     
     
+    
     % Calculate RSS for full model
-    A =[ones(size(X,1),1) X];
+    A =X;
     y_hat = A*round(b,10) ;
     error = (y_hat - y).^2;
     rss = sum(error);
@@ -68,18 +75,19 @@ for electrode = 1:nelectrodes
     for ii = 1:nelectrodes
         indices = ~(e_names == ii);
         X0 = X(:,indices);
-        [b0,~,stats] = glmfit(X0,y);
-        fit0.weights = b;
-        fit0.pvals = stats.p;
-        fit0.se = stats.se;
-        
-        A =[ones(size(X0,1),1) X0];
+%         [b0,~,stats] = glmfit(X0,y,'normal','constant','off');
+%         fit0.weights = b;
+%         fit0.pvals = stats.p;
+%         fit0.se = stats.se;
+        [mdl0] = fitglm(X0,y,'Distribution','normal','Intercept',false);
+         b0 = mdl0.Coefficients.Estimate;
+        A =[X0];
         y_hat = A*round(b0,10);
         error = (y_hat - y).^2;
         rss0 = sum(error);
         
         % Compute F statistic
-        F(electrode,ii) = ((rss0 - rss)/model_order)/(rss/(nobservations-nelectrodes*model_order-1));
+        F(electrode,ii) = ((rss0 - rss)/model_order)/(rss/(nobservations-nelectrodes*model_order));
         
     end
     

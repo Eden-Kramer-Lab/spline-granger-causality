@@ -90,10 +90,15 @@ else
     
     % Fit full model and calculate RSS
     Xfull = X * Z1;      % regressors for y_hat = X*Z1*alpha
-    [alpha,~,stats] = glmfit(Xfull,y,'normal','constant','off');  % estimate values at control points, alpha
+ %   [alpha_glm,~,stats] = glmfit(Xfull,y,'normal','constant','off');  % estimate values at control points, alpha
+          [mdl1] = fitglm(Xfull,y,'Distribution','normal','Intercept',false);
+        
+        alpha = mdl1.Coefficients.Estimate;
+     %   covb_glm = stats.covb;
     
+    covb = mdl1.CoefficientCovariance;
     for kk = 1:nsurrogates
-        alpha_hat = alpha + sqrtm(stats.covb)*normrnd(0,1,length(alpha),1);
+        alpha_hat = alpha + sqrtm(covb)*normrnd(0,1,length(alpha),1);
         % calculate beta values, for every point in space
         bhat(kk,:) = Z1*alpha_hat;                                     % only for electrodes in network
         j =1;

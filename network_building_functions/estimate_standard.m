@@ -1,4 +1,4 @@
-function [bhat, yhat] = estimate_standard(model, adj_mat )
+function [bhat, yhat,yhat_glmfit] = estimate_standard(model, adj_mat )
 % ESTIMATE_STANDARD fits standard-Granger model given an predetermined
 % network structure.
 %
@@ -44,7 +44,11 @@ for electrode = 1:nelectrodes
             X_temp = X_temp(model_order+1:end,:);
             X = [X X_temp];
         end
-        [b,~,~] = glmfit(X,y,'normal','constant','off'); % Fit model
+       [bglm,~,~] = glmfit(X,y,'normal','constant','off'); % Fit model
+        [mdl1] = fitglm(X,y,'Distribution','normal','Intercept',false);
+        b = mdl1.Coefficients.Estimate;
+
+        yhat_glmfit(electrode,:) = X*bglm;
         yhat(electrode,:) = glmval(b,X,'identity','constant','off'); % Get signal estimate.
         
         % Format inferred coefficients appropriately
