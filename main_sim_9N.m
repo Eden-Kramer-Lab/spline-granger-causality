@@ -1,6 +1,6 @@
 %%%%------------------ Configure Simulation--------------------------------
 
-model_true.show_all_plots = true; % if true, all plots for all signal fits will be
+model_true.show_all_plots = false; % if true, all plots for all signal fits will be
                        % ... will be output.  If false, only print-out of
                        % ... results will be shown.
 

@@ -8,7 +8,7 @@ model_true.show_all_plots = true; % if true, all plots for all signal fits will 
 model_true.true_coefficients = single_node_high_freq ;
 model_true.model_coefficients = model_true.true_coefficients;   
 model_true.sampling_frequency = 500;
-model_true.T = 20;        % time in seconds of window
+model_true.T = 2;        % time in seconds of window
 model_true.noise = 0.25; % standard deviation of the noise
 model_true.taxis = (1/model_true.sampling_frequency):(1/model_true.sampling_frequency):model_true.T;
 

@@ -52,8 +52,8 @@ for electrode = 1:nelectrodes % plot fit for every electrode in network
     if sum(adj_spline(electrode,:))==0
         UB = zeros(model_order,nelectrodes);
         LB = zeros(model_order,nelectrodes);
-        UB2 = zeros(T*f0,nelectrodes);
-        LB2 = zeros(T*f0,nelectrodes);
+        UB2 = zeros(model_order,nelectrodes);
+        LB2 = zeros(model_order,nelectrodes);
     else
         [UB,LB]= myBootstrap(model_spline,electrode);
         [ UB2, LB2] = myBootstrapStandard( model_standard, electrode );
