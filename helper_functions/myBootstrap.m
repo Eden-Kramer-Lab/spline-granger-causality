@@ -1,4 +1,4 @@
-function [ UB, LB] = myBootstrap( model, electrode )
+function [ LB, UB] = myBootstrap( model, electrode )
 % MYBOOTSTRAP creates surrogates for the coefficients estimates
 % when building AR models in the spline basis and computes 95% confidence
 % intervals.
@@ -122,8 +122,8 @@ else
     
     max_imaginary_ub = max(imag(bounds(1,:)));
     max_imaginary_lb = max(imag(bounds(2,:)));
-    UB = reshape(bounds(1,:),[model_order nelectrodes]);
-    LB = reshape(bounds(2,:),[model_order nelectrodes]);
+    LB = reshape(bounds(1,:),[model_order nelectrodes]);
+    UB = reshape(bounds(2,:),[model_order nelectrodes]);
     
 end
 

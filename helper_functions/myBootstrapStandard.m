@@ -1,4 +1,4 @@
-function [ UB, LB] = myBootstrapStandard( model, electrode )
+function [ LB, UB] = myBootstrapStandard( model, electrode )
 % MYBOOTSTRAP creates surrogates for the coefficients estimates
 % when building AR models in the standard basis and computes 95% confidence
 % intervals.
@@ -34,8 +34,8 @@ ii = electrode;
 preds = logical(adj_mat(ii,:)); %% Use results of F-test to input in network
 if sum(preds)==0
     bounds = zeros(2,model_order*nelectrodes);
-     UB = reshape(bounds(1,:),[model_order nelectrodes]);
-   LB = reshape(bounds(2,:),[model_order nelectrodes]);
+     LB = reshape(bounds(1,:),[model_order nelectrodes]);
+   UB = reshape(bounds(2,:),[model_order nelectrodes]);
 else
     data_copy = data(preds,:); %% Remove electrodes not connected in spline network
     X = [];                                 % Build history matrix
@@ -86,8 +86,8 @@ else
     sorted_b = sort(real(b));
     bounds(1,:) = sorted_b(ind1,:);
     bounds(2,:) = sorted_b(ind2,:);
-    UB = reshape(bounds(1,:),[model_order nelectrodes]);
-    LB = reshape(bounds(2,:),[model_order nelectrodes]);
+    LB = reshape(bounds(1,:),[model_order nelectrodes]);
+    UB = reshape(bounds(2,:),[model_order nelectrodes]);
     
 end
 
