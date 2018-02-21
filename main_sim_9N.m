@@ -14,7 +14,7 @@ model_true.taxis = (1/model_true.sampling_frequency):(1/model_true.sampling_freq
 
 %%% Define model inputs for spline Granger & standard Granger
 
-model_true.s = 0.5;                         % spline tenstion paramter
+model_true.s = 0.5;                         % spline tension paramter
 model_true.estimated_model_order = 20;      % history dependence in model (samples)
 model_true.cntrl_pts =0:5:model_true.estimated_model_order; % control points
 
