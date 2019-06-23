@@ -1,4 +1,4 @@
-function [bhat, yhat,   yhat_glmfit] = estimate_coefficient_fits( model, adj_mat)
+function [bhat, yhat] = estimate_coefficient_fits( model, adj_mat)
 % ESTIMATE_COEFFICIENT_FITS fits spline-Granger model given an predetermined
 % network structure.
 %
@@ -73,9 +73,9 @@ for electrode = 1:nelectrodes
         end
         Xfull = X * Z0;  % Regressors in spline basis
          A= Xfull;
-        [alpha1,~,~] = glmfit(Xfull,y,'normal','constant','off'); % Fit model
-       yhat_glmfit(electrode,:) = A*round(alpha1,10);
-        [mdl1] = fitglm(Xfull,y,'Distribution','normal','Intercept',false);
+        %[alpha1,~,~] = glmfit(Xfull,y,'normal','constant','off'); % Fit model
+%        yhat_glmfit(electrode,:) = A*round(alpha1,10);
+         [mdl1] = fitglm(Xfull,y,'Distribution','normal','Intercept',false);
         alpha = mdl1.Coefficients.Estimate;
      %   yhat = A*round(alpha,10);
        

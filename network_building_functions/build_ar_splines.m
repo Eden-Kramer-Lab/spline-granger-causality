@@ -1,4 +1,4 @@
-function [ adj_mat, C] = build_ar_splines( model )
+function [ adj_mat, C, bhat] = build_ar_splines( model )
 % BUILD_AR_SPLINES builds network model using spline-Granger approach and
 % outputs:
 % . adj_mat = adjacencey matrix for corresponding network
@@ -6,15 +6,16 @@ function [ adj_mat, C] = build_ar_splines( model )
 
 warning off
 
-% 1) Initialize variables & outputs 
+% 1) Initialize variables & outputs
 data = model.data;
 model_order = model.estimated_model_order;
 cntrl_pts = model.cntrl_pts;
 q = model.q; % max number acceptable proportion of false discoveries
-s = model.s; % tension parameter
+s = 0.2;% model.s; % tension parameter
 nobservations = length(data(1,model_order+1:end)); % number of observations
 nelectrodes = size(data,1);                        % number of electrodes
 F = zeros(nelectrodes);                            % matrix of F-statistics
+bhat = zeros(nelectrodes,nelectrodes,model_order);
 
 % 2) Define control points and build predictors
 %    Construct spline regressors.
@@ -69,7 +70,7 @@ end
 
 % 4) Determine connectivity using F test.
 %    Build models and test correlation for every electrode pair.
-
+btemp = zeros(nelectrodes,model_order*nelectrodes);
 for electrode = 1:nelectrodes
     
     % Generate observations for given y
@@ -79,20 +80,21 @@ for electrode = 1:nelectrodes
     
     % Fit full model and calculate RSS
     Xfull = X * Z1;      % regressors for y_hat = X*Z1*alpha
-        [mdl1] = fitglm(Xfull,y,'Distribution','normal','Intercept',false);
-        A= Xfull;
-        alpha = mdl1.Coefficients.Estimate;
-        y_hat = A*round(alpha,10);
-        fit.AIC = mdl1.ModelCriterion.AIC;
-%    [alpha,dev,stats] = glmfit(Xfull,y,'normal','constant','off');
-%     fit.weights = alpha;
-%     fit.pvals = stats.p;
-%     fit.se = stats.se;
-%     fit.dev = dev;
-%     A = Xfull;
-%     y_hat = A*round(alpha,10);
-%     LL2 = sum(log(normpdf(y,y_hat)));
-%     fit.LL2 = LL2;
+    [mdl1] = fitglm(Xfull,y,'Distribution','normal','Intercept',false);
+    A= Xfull;
+    alpha = mdl1.Coefficients.Estimate;
+    y_hat = A*round(alpha,10);
+    btemp(electrode,:) = Z1 * alpha;
+    fit.AIC = mdl1.ModelCriterion.AIC;
+    %    [alpha,dev,stats] = glmfit(Xfull,y,'normal','constant','off');
+    %     fit.weights = alpha;
+    %     fit.pvals = stats.p;
+    %     fit.se = stats.se;
+    %     fit.dev = dev;
+    %     A = Xfull;
+    %     y_hat = A*round(alpha,10);
+    %     LL2 = sum(log(normpdf(y,y_hat)));
+    %     fit.LL2 = LL2;
     C{electrode} = fit;
     error = (y_hat - y).^2;
     rss = sum(error);
@@ -100,13 +102,13 @@ for electrode = 1:nelectrodes
     % Fit partial model and calculate RSS0 for all minus one electrode
     for ii = 1:nelectrodes
         indices = ~(e_names == ii);
-        X0 = X(:,indices); 
-        X0full = X0 * Z0;  
+        X0 = X(:,indices);
+        X0full = X0 * Z0;
         [mdl0] = fitglm(X0full,y,'Distribution','normal','Intercept',false);
         %[a0,~,stats] = glmfit(X0full,y,'normal','constant','off');
-%         fit0.weights = a0;
-%         fit0.pvals = stats.p;
-%         fit0.se = stats.se;
+        %         fit0.weights = a0;
+        %         fit0.pvals = stats.p;
+        %         fit0.se = stats.se;
         A = X0full;
         a0 = mdl0.Coefficients.Estimate;
         y_hat = A*round(a0,10) ;
@@ -118,7 +120,18 @@ for electrode = 1:nelectrodes
         
     end
     
+    j=1;
+    for p = 1:nelectrodes
+        
+        bhat(electrode,p,:) = btemp(electrode,j:j+model_order-1);
+        j= j+model_order;
+        
+    end
+    
 end
+
+% Format inferred coefficients appropriately
+
 
 
 % 5) Hypothesis test
