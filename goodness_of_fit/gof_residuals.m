@@ -50,8 +50,7 @@ for electrode = 1:nelectrodes
         % Plot autocorrelation of residuals
         subplot 313
         autocorr(residuals(electrode,:));
-        suptitle(['Fit for Signal: ' num2str(electrode) ' of ' model.name])
-       % suptitle(strcat({'Standard, '},num2str(model_standard.computation_time),{' s'}),'FontSize',16
+        title(['Fit for Signal: ' num2str(electrode) ' of ' model.name])
     end
 end
 
