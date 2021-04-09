@@ -59,7 +59,7 @@ if model_true.show_all_plots
         ylabel('Cumulative Density');
         axis tight
     end
-    suptitle('Integrated Spectrum Test')
+    title('Integrated Spectrum Test')
 end
 
 %% Model Test #3 - Test coefficients
